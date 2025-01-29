@@ -1,6 +1,6 @@
-'use client'
-import React, { useState } from 'react';
-import Image from 'next/image';
+import { client } from "../lib/sanity";
+import FilterComponent from "../components/FilterComponent";
+import Image from "next/image";
 import Link from "next/link";
 import {
   Card,
@@ -11,97 +11,112 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function Page() {
-  const [showMore, setShowMore] = useState(false);
-
-  const toggleShowMore = () => {
-    setShowMore(!showMore);
+interface SimplifiedCar {
+  _id: string;
+  name: string;
+  type: string;
+  slug: {
+    current: string;
   };
+  image: {
+    asset: {
+      url: string;
+    };
+  };
+  fuelCapacity: string;
+  transmission: string;
+  seatingCapacity: string;
+  pricePerDay: string;
+}
+
+// Fetch data server-side
+async function getData(): Promise<SimplifiedCar[]> {
+  const query = `*[_type == "car"]{
+    _id,
+    name,
+    type,
+    slug,
+    image{
+      asset->{url}
+    },
+    fuelCapacity,
+    transmission,
+    seatingCapacity,
+    pricePerDay,
+  }`;
+
+  return await client.fetch(query);
+}
+
+// Main Page Component
+export default async function CategoriesPage() {
+  const cars = await getData(); // Fetch data on the server side
 
   return (
-    <div className='w-full flex'>
-      <div className="first hidden sm:flex w-[20%]">
-        <Image src={'/Nav Bar Side.png'} alt='' width={360} height={1600}/>
+    <div className="w-full flex">
+      {/* Filter Sidebar */}
+      <div className="hidden sm:flex w-[20%]">
+        <FilterComponent onFilterChange={(filters) => console.log(filters)} />
       </div>
-      <div className="sec w-full sm:w-[80%] bg-[#f6f7f9] p-4 sm:p-6  flex flex-col gap-10 font-[family-name:var(--font-geist-sans)]">
-        <section className="w-full flex flex-col sm:flex-row items-center justify-center sm:justify-between ">
-          <Image src={"/Pick - Up.png"} alt="" width={582} height={132} className="w-[200px] md:w-[270px] lg:w-[582px]" />
-          <Image src={"/Switch.png"} alt="" width={60} height={60} className="w-[80px]" />
-          <Image src={"/Drop - Off.png"} alt="" width={582} height={132} className=' w-[200px] md:w-[270px] lg:w-[582px]' />
-        </section>
-        <section className="popular w-full flex flex-col gap-4">
-          <div className="sec grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { title: 'Koenigsegg', image: '/car.png', desc: 'Sport' },
-              { title: 'Nissan GT - R', image: '/car (1).png', desc: 'Luxury' },
-              { title: 'Rolls-Royce', image: '/suv.png', desc: 'Sport' },
-              { title: 'All New Rush', image: '/suv (4).png', desc: 'Luxury' },
-              { title: 'CR - V', image: '/suv (4).png', desc: 'Luxury' },
-              { title: 'ALLNEW TERIOS', image: '/suv.png', desc: 'SUV' },
-              { title: 'MGZX Exclusive', image: '/suv (4).png', desc: 'Luxury' },
-              { title: 'NEW MGZS', image: '/suv.png', desc: 'SUV' },
-            ].map((car, index) => (
-              <Card key={index} className="w-full max-w-[304px] mx-auto h-auto flex flex-col justify-between">
-                <CardHeader>
-                  <CardTitle className="w-full flex items-center justify-between">
-                    {car.title} <Image src={"/heart.png"} alt="" width={20} height={20} />
-                  </CardTitle>
-                  <CardDescription>{car.desc}</CardDescription>
-                </CardHeader>
-                <CardContent className="w-full flex md:flex-col items-center justify-center gap-4">
-                  <Image src={car.image} alt="" width={220} height={68} />
-                  <Image src={"/Spesification.png"} alt="" width={256} height={24} className='hidden md:flex' />
-                  <Image src={"/Spesification (1).png"} alt="" width={256} height={24} className='md:hidden' />
-                </CardContent>
-                <CardFooter className="w-full flex items-center justify-between">
-                  <p>
-                    $99.00/<span className="text-gray-500">day</span>
-                  </p>
-                  <Link href={'/details'}>
-                  <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button></Link>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-          {showMore && (
-            <div className="sec grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-                { title: 'MG ZX Exclusive', image: '/suv.png', desc: 'SUV' },
-                { title: 'NEW MG ZS', image: '/suv (4).png', desc: 'Sedan' },
-                { title: 'New MG ZX Excite', image: '/suv.png', desc: 'Sport' },
-                { title: 'NEW MG ZS', image: '/suv (4).png', desc: 'Sedan' },
-              ].map((car, index) => (
-                <Card key={index} className="w-full max-w-[304px] mx-auto h-auto flex flex-col justify-between">
-                  <CardHeader>
-                    <CardTitle className="w-full flex items-center justify-between">
-                      {car.title} <Image src={"/heart.png"} alt="" width={20} height={20} />
-                    </CardTitle>
-                    <CardDescription>{car.desc}</CardDescription>
-                  </CardHeader>
-                  <CardContent className="w-full flex md:flex-col items-center justify-center gap-4">
-                    <Image src={car.image} alt="" width={220} height={68} />
-                    <Image src={"/Spesification.png"} alt="" width={256} height={24} className='hidden md:flex' />
-                    <Image src={"/Spesification (1).png"} alt="" width={256} height={24} className='md:hidden' />
-                  </CardContent>
-                  <CardFooter className="w-full flex items-center justify-between">
-                    <p>
-                      $99.00/<span className="text-gray-500">day</span>
-                    </p>
-                    <button className="bg-[#3563e9] p-2 text-white rounded-md">Rent Now</button>
-                  </CardFooter>
-                </Card>
-              ))}
-            </div>
-          )}
-        </section>
 
-        <section className="button w-full text-center">
-          <button 
-            onClick={toggleShowMore} 
-            className="bg-[#3563e9] px-4 py-2 text-white rounded-md mt-5"
-          >
-            {showMore ? "Show Less Cars" : "Show More Cars"}
-          </button>
+      {/* Car Listings */}
+      <div className="w-full sm:w-[80%] bg-[#f6f7f9] p-4 sm:p-6 flex flex-col gap-10">
+        <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
+          {cars.map((car: SimplifiedCar) => (
+            <Card
+              key={car._id}
+              className="w-full max-w-[304px] mx-auto h-[388px] flex flex-col justify-between"
+            >
+              <CardHeader>
+                <CardTitle className="flex justify-between items-center">
+                  {car.name}
+                  <Image src="/heart.png" alt="Favorite" width={20} height={20} />
+                </CardTitle>
+                <CardDescription>{car.type}</CardDescription>
+              </CardHeader>
+
+              <CardContent className="flex flex-col items-center justify-center gap-4">
+                <Image
+                  src={car.image.asset.url}
+                  alt={car.name}
+                  width={220}
+                  height={68}
+                  className="object-contain"
+                />
+                <div className="flex items-center justify-between gap-6 mt-4">
+                  {/* Fuel Capacity */}
+                  <div className="flex items-center gap-2">
+                    <Image src="/gas-station.png" alt="Fuel" width={26} height={24} />
+                    <h1 className="text-sm text-gray-700">{car.fuelCapacity}</h1>
+                  </div>
+
+                  {/* Transmission */}
+                  <div className="flex items-center gap-2">
+                    <Image src="/Caricon.png" alt="Transmission" width={26} height={24} />
+                    <h1 className="text-sm text-gray-700">{car.transmission}</h1>
+                  </div>
+
+                  {/* Seating Capacity */}
+                  <div className="flex items-center gap-2">
+                    <Image src="/profile-2user.png" alt="Seating" width={26} height={24} />
+                    <h1 className="text-sm text-gray-700">{car.seatingCapacity}</h1>
+                  </div>
+                </div>
+              </CardContent>
+
+              <CardFooter className="flex items-center justify-between">
+                <p className="text-lg font-semibold">
+                  {car.pricePerDay}
+                  <span className="text-sm text-gray-500">/day</span>
+                </p>
+                <Link href={`/categories/${car.slug.current}`}>
+                  <button className="bg-[#3563e9] text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                    Rent Now
+                  </button>
+                </Link>
+              </CardFooter>
+            </Card>
+          ))}
         </section>
       </div>
     </div>

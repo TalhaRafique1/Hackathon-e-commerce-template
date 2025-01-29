@@ -7,10 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-     "import-data": "node scripts/importSanityData.mjs"
+    "import-data": "node scripts/importSanityData.mjs"
   },
   "dependencies": {
-    "@sanity/client": "^6.25.0",
+    "@radix-ui/react-slider": "^1.2.2",
+    "@sanity/client": "^6.27.1",
     "@sanity/image-url": "^1.1.0",
     "@sanity/vision": "^3.70.0",
     "axios": "^1.7.9",
@@ -28,7 +29,7 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^20.17.16",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
