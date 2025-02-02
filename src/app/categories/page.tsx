@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { client } from "../lib/sanity";
 import FilterComponent from "../components/FilterComponent";
 import Image from "next/image";
@@ -29,40 +32,66 @@ interface SimplifiedCar {
   pricePerDay: string;
 }
 
-// Fetch data server-side
-async function getData(): Promise<SimplifiedCar[]> {
-  const query = `*[_type == "car"]{
-    _id,
-    name,
-    type,
-    slug,
-    image{
-      asset->{url}
-    },
-    fuelCapacity,
-    transmission,
-    seatingCapacity,
-    pricePerDay,
-  }`;
+export default function CategoriesPage() {
+  const [cars, setCars] = useState<SimplifiedCar[]>([]);
+  const [filters, setFilters] = useState({
+    type: [] as string[],
+    seatingCapacity: [] as string[],
+    fuelCapacity: [] as string[],
+  });
 
-  return await client.fetch(query);
-}
+  useEffect(() => {
+    async function getData() {
+      const query = `*[_type == "car"]{
+        _id,
+        name,
+        type,
+        slug,
+        image{
+          asset->{url}
+        },
+        fuelCapacity,
+        transmission,
+        seatingCapacity,
+        pricePerDay,
+      }`;
+      const data = await client.fetch(query);
+      setCars(data);
+    }
+    getData();
+  }, []);
 
-// Main Page Component
-export default async function CategoriesPage() {
-  const cars = await getData(); // Fetch data on the server side
+  // Handle filter changes
+  const handleFilterChange = (newFilters: {
+    type: string[];
+    seatingCapacity: string[];
+    fuelCapacity: string[];
+  }) => {
+    setFilters(newFilters);
+  };
+
+  // **Apply Filters to the Car List**
+  const filteredCars = cars.filter((car) => {
+    return (
+      (filters.type.length === 0 || filters.type.includes(car.type)) &&
+      (filters.seatingCapacity.length === 0 ||
+        filters.seatingCapacity.includes(car.seatingCapacity)) &&
+      (filters.fuelCapacity.length === 0 ||
+        filters.fuelCapacity.includes(car.fuelCapacity))
+    );
+  });
 
   return (
     <div className="w-full flex">
       {/* Filter Sidebar */}
       <div className="hidden sm:flex w-[20%]">
-        <FilterComponent onFilterChange={(filters) => console.log(filters)} />
+        <FilterComponent onFilterChange={handleFilterChange} />
       </div>
 
       {/* Car Listings */}
       <div className="w-full sm:w-[80%] bg-[#f6f7f9] p-4 sm:p-6 flex flex-col gap-10">
         <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-          {cars.map((car: SimplifiedCar) => (
+          {filteredCars.map((car: SimplifiedCar) => (
             <Card
               key={car._id}
               className="w-full max-w-[304px] mx-auto h-[388px] flex flex-col justify-between"
@@ -109,8 +138,13 @@ export default async function CategoriesPage() {
                   {car.pricePerDay}
                   <span className="text-sm text-gray-500">/day</span>
                 </p>
-                <Link href={`/categories/${car.slug.current}`}>
-                  <button className="bg-[#3563e9] text-white px-4 py-2 rounded-md hover:bg-blue-600">
+                <Link href={car.slug?.current ? `/categories/${car.slug.current}` : "#"} passHref>
+                  <button
+                    className={`bg-[#3563e9] text-white px-4 py-2 rounded-md hover:bg-blue-600 ${
+                      !car.slug?.current ? "opacity-50 cursor-not-allowed" : ""
+                    }`}
+                    disabled={!car.slug?.current}
+                  >
                     Rent Now
                   </button>
                 </Link>
