@@ -36,8 +36,12 @@ export default function CalendarPage() {
   const [editEvent, setEditEvent] = useState<Event | null>(null);
 
   // Handle date change
-  const handleDateChange = (value: Date) => {
-    setDate(value);
+  const handleDateChange = (value: Date | Date[]) => {
+    if (Array.isArray(value)) {
+      setDate(value[0]); // if multiple dates are selected, use the first one
+    } else {
+      setDate(value);
+    }
   };
 
   // Get events for the selected date
@@ -95,7 +99,7 @@ export default function CalendarPage() {
         {/* Calendar Component */}
         <div className="bg-white shadow-md rounded-lg p-4 sm:p-6 mb-4 w-full max-w-full mx-auto">
           <Calendar
-            onChange={handleDateChange as any} // TypeScript workaround
+            onChange={(value) => handleDateChange(value as Date | Date[])} // Corrected function signature
             value={date}
             className="react-calendar w-full"
           />

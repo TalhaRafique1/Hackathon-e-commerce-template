@@ -3,18 +3,18 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // Correct import for next 13+
-import Link from "next/link"; // Import Link component for navigation
+import Link from "next/link"; 
 
 const Signin = () => {
   const router = useRouter();
 
-  // TypeScript types for state
+  
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string>("");
 
   const handleSignin = () => {
-    // Fetch the stored user data from localStorage (simulating database check)
+    
     const storedUser = JSON.parse(localStorage.getItem("user") || "null");
 
     if (!storedUser) {
