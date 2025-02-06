@@ -7,14 +7,14 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "import-data": "node scripts/importSanityData.mjs"
+    "import-data": "node scripts/importTemplate7Data.mjs"
   },
   "dependencies": {
     "@portabletext/react": "^3.2.0",
     "@radix-ui/react-slider": "^1.2.2",
     "@sanity/client": "^6.27.2",
     "@sanity/image-url": "^1.1.0",
-    "@sanity/types": "^3.72.1",
+    "@sanity/types": "^3.74.0",
     "@sanity/ui": "^2.11.7",
     "@sanity/vision": "^3.70.0",
     "@types/stripe": "^8.0.416",
@@ -27,11 +27,13 @@
     "next-sanity": "^9.8.46",
     "react": "^18",
     "react-dom": "^18",
+    "react-icons": "^5.4.0",
     "sanity": "^3.70.0",
     "stripe": "^17.6.0",
     "styled-components": "^6.1.14",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "@types/node": "^20.17.16",

@@ -1,5 +1,6 @@
-import cars from './cars'
-import userOrder from './userOrder'
+import { type SchemaTypeDefinition } from 'sanity'
+ import car from './car'
 
-export const schemaTypes = [cars, userOrder]
-export const schema = { types: schemaTypes }
+export const schema: { types: SchemaTypeDefinition[] } = {
+  types: [car],
+}
