@@ -5,7 +5,6 @@ import Image from "next/image";
 import { client } from '@/sanity/lib/client';
 import Link from "next/link";
 
-
 interface Car {
   _id: string;
   name: string;
@@ -17,11 +16,10 @@ interface Car {
   originalPrice?: number;
 }
 
-
 interface PageProps {
-  params: Promise<{
+  params: {
     carId: string;
-  }>;
+  };
 }
 
 export default function PaymentPage({ params }: PageProps) {
@@ -43,7 +41,7 @@ export default function PaymentPage({ params }: PageProps) {
           originalPrice
         }`;
         
-        const { carId } = await params;
+        const { carId } = params;
         const result = await client.fetch(query, { carId });
         console.log("Fetched Car Data:", result)
         setCar(result);
