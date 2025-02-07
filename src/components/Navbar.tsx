@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { FaSearch, FaSlidersH, FaBell, FaHeart, FaCog, FaUser, FaCommentDots } from "react-icons/fa"; // Added FaCommentDots
+import { FaBell, FaHeart, FaCog, FaUser, FaCommentDots } from "react-icons/fa"; // Added FaCommentDots
 import Link from "next/link";
 
 export default function Navbar() {

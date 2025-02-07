@@ -36,6 +36,7 @@ export default function PaymentPage({ params }: { params: { carId: string } }) {
         }`;
         
         const result = await client.fetch(query, { carId: params.carId });
+        console.log("Fetched Car Data:", result)
         setCar(result);
       } catch (error) {
         console.error('Error fetching car:', error);
@@ -260,7 +261,7 @@ export default function PaymentPage({ params }: { params: { carId: string } }) {
                   <label htmlFor="payPal">PayPal</label>
                 </div>
                 <Image
-                  src="/images/PayPal.png" // Add your PayPal image here
+                  src="/images/PayPal (1).png" // Add your PayPal image here
                   alt="PayPal"
                   width={30}
                   height={30}
@@ -275,7 +276,7 @@ export default function PaymentPage({ params }: { params: { carId: string } }) {
                   <label htmlFor="bitcoin">Bitcoin</label>
                 </div>
                 <Image
-                  src="/images/Bitcoin.png" // Add your Bitcoin image here
+                  src="/images/Bitcoin (1).png" // Add your Bitcoin image here
                   alt="Bitcoin"
                   width={30}
                   height={30}

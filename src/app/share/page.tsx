@@ -2,7 +2,7 @@
 'use client';
 
 import { useState } from 'react';
-import { FaFacebook, FaHeart, FaRegHeart, FaTwitter, FaWhatsapp } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { GiCarDoor, GiGasPump } from "react-icons/gi";
 import { BiCog } from "react-icons/bi";
 import { FaUsers } from "react-icons/fa";
