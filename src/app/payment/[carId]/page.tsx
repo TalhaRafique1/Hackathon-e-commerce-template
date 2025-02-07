@@ -5,6 +5,7 @@ import Image from "next/image";
 import { client } from '@/sanity/lib/client';
 import Link from "next/link";
 
+
 interface Car {
   _id: string;
   name: string;
@@ -16,7 +17,14 @@ interface Car {
   originalPrice?: number;
 }
 
-export default function PaymentPage({ params }: { params: { carId: string } }) {
+
+interface PageProps {
+  params: Promise<{
+    carId: string;
+  }>;
+}
+
+export default function PaymentPage({ params }: PageProps) {
   const [car, setCar] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
@@ -35,7 +43,8 @@ export default function PaymentPage({ params }: { params: { carId: string } }) {
           originalPrice
         }`;
         
-        const result = await client.fetch(query, { carId: params.carId });
+        const { carId } = await params;
+        const result = await client.fetch(query, { carId });
         console.log("Fetched Car Data:", result)
         setCar(result);
       } catch (error) {
@@ -46,7 +55,7 @@ export default function PaymentPage({ params }: { params: { carId: string } }) {
     };
 
     fetchCar();
-  }, [params.carId]);
+  }, [params]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
