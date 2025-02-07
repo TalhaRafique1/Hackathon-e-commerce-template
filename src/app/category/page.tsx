@@ -19,14 +19,14 @@ type Car = {
   fuelCapacity: string;
   transmission: string;
   seatingCapacity: number;
-  pricePerDay: number;
+  pricePerDay: string; // Make sure it's a string for later conversion
   originalPrice?: number;
   tags: string[]; // Removed popular tag here
   imageUrl: string;
 };
 
 export default function CategoryPage() {
-  const [cars, setCars] = useState<Car[]>([]); 
+  const [cars, setCars] = useState<Car[]>([]);
   const [filteredCars, setFilteredCars] = useState<Car[]>([]);
 
   useEffect(() => {
@@ -122,7 +122,11 @@ export default function CategoryPage() {
       filtered = filtered.filter((car) => car.seatingCapacity >= capacityMap[selectedCapacity!]);
     }
 
-    filtered = filtered.filter((car) => car.pricePerDay <= price);
+    // Convert pricePerDay to a number before comparing
+    filtered = filtered.filter((car) => {
+      const priceValue = parseFloat(car.pricePerDay.replace('$', '').replace('/day', '').trim());
+      return priceValue <= price;
+    });
 
     setFilteredCars(filtered);
   }, [selectedType, selectedCapacity, price, cars]);
@@ -165,15 +169,15 @@ export default function CategoryPage() {
         <div>
           <h2 className="text-2xl font-semibold mb-4">Price</h2>
           <div className="relative pt-2">
-            <label htmlFor="priceRange" className="sr-only">Price Range</label>
             <input
-              id="priceRange"
               type="range"
               min="0"
               max="500"
               value={price}
               onChange={(e) => setPrice(Number(e.target.value))}
               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+              title="Price range"
+              placeholder="Select price range"
             />
             <div
               className="absolute top-0 left-0 h-2 rounded-lg bg-blue-500 pointer-events-none"

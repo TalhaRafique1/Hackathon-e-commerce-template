@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { FaCar, FaShoppingCart, FaUsers, FaTags, FaChartLine, FaCog, FaArrowRight } from "react-icons/fa";
+import { useState } from "react";
+import { FaCar, FaShoppingCart, FaUsers, FaTags, FaArrowRight } from "react-icons/fa";
 
 const AdminDashboard = () => {
   const [activeSection, setActiveSection] = useState<"cars" | "bookings" | "users" | "categories" | null>(null);
@@ -64,7 +64,7 @@ const AdminDashboard = () => {
                 <h3 className="text-xl font-bold text-gray-800">{tool.title}</h3>
               </div>
               <button
-                onClick={() => setActiveSection(tool.title.toLowerCase() as any)}
+                onClick={() => setActiveSection(tool.title.toLowerCase() as "cars" | "bookings" | "users" | "categories")}
                 className="mt-6 w-full flex items-center justify-between px-4 py-2 bg-white text-gray-800 rounded-lg hover:bg-gray-100 transition-all"
               >
                 <span>Manage</span>

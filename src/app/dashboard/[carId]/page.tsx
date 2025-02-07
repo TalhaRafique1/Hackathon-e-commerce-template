@@ -268,7 +268,7 @@ export default function DashboardPage() {
                 Rent Now
               </Link>
               <Link
-                href="https://book.stripe.com/test_3cs5lNa6o4hwd6E000"
+                href="https://buy.stripe.com/test_28oeVEczG1jP71mdQQ"
                 className="mt-6 block w-full sm:w-auto md:w-full bg-green-600 text-white text-center py-3 rounded-lg font-semibold hover:bg-green-700 transition"
               >
                 CheckOut
