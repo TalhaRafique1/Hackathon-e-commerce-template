@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { client } from '@/sanity/lib/client';
+import { useParams } from "next/navigation";
+import { client } from "@/sanity/lib/client";
 import Link from "next/link";
 
 interface Car {
@@ -16,18 +17,21 @@ interface Car {
   originalPrice?: number;
 }
 
-interface PageProps {
-  params: {
-    carId: string;
-  };
-}
+export default function PaymentPage() {
+  // Retrieve the dynamic route parameter from the URL.
+  const { carId } = useParams();
 
-export default function PaymentPage({ params }: PageProps) {
   const [car, setCar] = useState<Car | null>(null);
   const [loading, setLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
 
   useEffect(() => {
+    if (!carId) {
+      console.error("carId is missing from the URL.");
+      setLoading(false);
+      return;
+    }
+
     const fetchCar = async () => {
       try {
         const query = `*[_type == "car" && _id == $carId][0] {
@@ -41,19 +45,18 @@ export default function PaymentPage({ params }: PageProps) {
           originalPrice
         }`;
         
-        const { carId } = params;
         const result = await client.fetch(query, { carId });
-        console.log("Fetched Car Data:", result)
+        console.log("Fetched Car Data:", result);
         setCar(result);
       } catch (error) {
-        console.error('Error fetching car:', error);
+        console.error("Error fetching car:", error);
       } finally {
         setLoading(false);
       }
     };
 
     fetchCar();
-  }, [params]);
+  }, [carId]);
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -201,7 +204,7 @@ export default function PaymentPage({ params }: PageProps) {
                   <label htmlFor="creditCard">Credit Card</label>
                 </div>
                 <Image
-                  src="/images/Visa.png" // Add your credit card image here
+                  src="/images/Visa.png"
                   alt="Credit Card"
                   width={40}
                   height={40}
@@ -209,7 +212,7 @@ export default function PaymentPage({ params }: PageProps) {
                 />
               </div>
 
-              {/* Form fields layout */}
+              {/* Card details fields */}
               <div className="space-y-4 mt-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="flex flex-col">
@@ -268,7 +271,7 @@ export default function PaymentPage({ params }: PageProps) {
                   <label htmlFor="payPal">PayPal</label>
                 </div>
                 <Image
-                  src="/images/PayPal (1).png" // Add your PayPal image here
+                  src="/images/PayPal (1).png"
                   alt="PayPal"
                   width={30}
                   height={30}
@@ -283,7 +286,7 @@ export default function PaymentPage({ params }: PageProps) {
                   <label htmlFor="bitcoin">Bitcoin</label>
                 </div>
                 <Image
-                  src="/images/Bitcoin (1).png" // Add your Bitcoin image here
+                  src="/images/Bitcoin (1).png"
                   alt="Bitcoin"
                   width={30}
                   height={30}
@@ -294,28 +297,34 @@ export default function PaymentPage({ params }: PageProps) {
           </div>
 
           {/* Confirmation Section */}
-          <h2 className="text-2xl font-bold ">Confirmation</h2>
+          <h2 className="text-2xl font-bold">Confirmation</h2>
           <div className="w-full flex items-center justify-between mb-4">
-            <h1 className="text-gray-400">We are getting to the end. Just a few clicks and your rental is ready</h1>
+            <h1 className="text-gray-400">
+              We are getting to the end. Just a few clicks and your rental is ready
+            </h1>
             <h1>Step 4 of 4</h1>
           </div>
 
-          {/* Small Paragraphs with Checkboxes */}
+          {/* Checkboxes */}
           <div className="space-y-4">
             <div className="flex items-center">
               <input type="checkbox" className="mr-2" id="marketing" />
-              <label htmlFor="marketing">I agree with sending marketing and newsletter emails. No spam, promised!</label>
+              <label htmlFor="marketing">
+                I agree with sending marketing and newsletter emails. No spam, promised!
+              </label>
             </div>
             <div className="flex items-center">
               <input type="checkbox" className="mr-2" id="terms" />
-              <label htmlFor="terms">I agree with our terms and conditions and privacy policy.</label>
+              <label htmlFor="terms">
+                I agree with our terms and conditions and privacy policy.
+              </label>
             </div>
           </div>
 
           {/* Rent Now Button */}
           <Link
-            href="/" // Correct dynamic route for carId
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg text-center w-full inline-block"
+            href="/"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg text-center w-full inline-block mt-4"
           >
             Rent now
           </Link>
@@ -329,7 +338,7 @@ export default function PaymentPage({ params }: PageProps) {
               Prices may change depending on the length of the rental and the <br />
               price of your rental car.
             </p>
-            
+
             {loading ? (
               <div className="animate-pulse space-y-4">
                 <div className="h-48 bg-gray-200 rounded-lg"></div>
